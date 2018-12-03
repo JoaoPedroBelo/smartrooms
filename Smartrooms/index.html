@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+    <title>Smart Study Rooms</title>
+</head>
+
+<body style="background: rgb(243, 243, 243)">
+
+    <div id="app">
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="#" style="font-weight: bold;">Distributed Systems 18/19</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                                Smart Study Rooms
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" @click="view = 'now'" href="#">Now</a>
+                                <a class="dropdown-item" @click="view = 'history'" href="#">History</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Grupo 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Grupo 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Grupo 4</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Grupo 5</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link">Good morning <b>Gertrudes Almeida</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container" style="margin-top: 80px" v-show="view == 'now'">
+
+            <!-- <nav>
+                <ol class="breadcrumb bg-dark">
+                    <li class="breadcrumb-item text-white">Smart Study Rooms</li>
+                    <li class="breadcrumb-item text-white">Now</li>
+                </ol>
+            </nav> -->
+
+            <div class="row mb-2">
+                <div class="col-md-2 my-2">
+                    <label>Time Range</label>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" :disabled="loading">
+                            {{ time_range }}
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" @click="time_range = 'Now'">Now</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 1h'">Last 1h</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 3h'">Last 3h</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 6h'">Last 6h</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 12h'">Last 12h</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 24h'">Last 24h</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 2d'">Last 2d</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 7d'">Last 7d</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Last 30d'">Last 30d</a>
+                            <a class="dropdown-item" href="#" @click="time_range = 'Custom'">Custom</a>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="time_range == 'Custom'" class="col-md-3 my-2">
+                    <label>From</label>
+                    <input type="date" class="form-control" v-model="custom_from" :disabled="loading">
+                </div>
+                <div v-if="time_range == 'Custom'" class="col-md-3 my-2">
+                    <label>To</label>
+                    <input type="date" class="form-control" v-model="custom_to" :disabled="loading">
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 my-2">
+                    <div class="p-2 bg-white">
+                        <canvas id="ocupation-rate-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-md-6 my-2">
+                    <div class="p-2 bg-white">
+                        <canvas id="seats-chart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mb-3">
+
+                <div class="col-md-6 my-2">
+                    <div class="p-2 bg-white">
+                        <canvas id="daily-ocupation-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-md-6 my-2">
+                    <div class="p-2 bg-white">
+                        <canvas id="ocupation-rate-predicted-chart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="container" style="margin-top: 80px" v-show="view == 'history'">
+
+            <nav>
+                <ol class="breadcrumb bg-dark">
+                    <li class="breadcrumb-item text-white">Smart Study Rooms</li>
+                    <li class="breadcrumb-item text-white">History</li>
+                </ol>
+            </nav>
+
+        </div>
+
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
+    <script>
+
+        const piso_0_color = 'rgb(85, 161, 195)'
+        const piso_1_color = 'rgb(141, 198, 121)'
+        const piso_2_color = 'rgb(240, 199, 120)'
+        const piso_3_color = 'rgb(201, 131, 165)'
+        const lugares_livres_color = 'rgb(141, 198, 121)'
+        const lugares_ocupados_color = 'rgb(85, 161, 195)'
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                view: 'now',
+                loading: false,
+                time_range: 'Now',
+                ocupation_rate_chart: null,
+                seats_chart: null,
+                daily_ocupation_chart: null,
+                ocupation_rate_predicted_chart: null,
+                custom_from: null,
+                custom_to: null
+            },
+            watch: {
+                time_range: function () {
+                    console.log(this.time_range)
+                    if (this.time_range != 'Custom') this.fecthData()
+                },
+                custom_from: function () {
+                    this.customUpdated()
+                },
+                custom_to: function () {
+                    this.customUpdated()
+                }
+            },
+            methods: {
+                customUpdated() {
+                    if (this.time_range == 'Custom' && this.custom_from != null && this.custom_to != null) {
+                        console.log(this.custom_from, this.custom_to)
+                        this.fecthData()
+                    }
+                },
+                emptyChartData(chart) {
+                    chart.data = {
+                        labels: [],
+                        datasets: []
+                    }
+                    chart.update()
+                },
+                initCharts() {
+                    /*----------------------------------------*/
+                    /*  Ocupation Rate Chart
+                    /*----------------------------------------*/
+                    this.ocupation_rate_chart = new Chart('ocupation-rate-chart', {
+                        type: 'bar',
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        min: 0,
+                                        max: 100
+                                    }
+                                }]
+                            },
+                            title: {
+                                display: true,
+                                text: 'Taxa de ocupação',
+                                fontSize: 16
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
+                    })
+
+                    /*----------------------------------------*/
+                    /*  Seats Chart
+                    /*----------------------------------------*/
+                    this.seats_chart = new Chart('seats-chart', {
+                        type: 'bar',
+                        options: {
+                            responsive: true,
+                            legend: {
+                                position: 'bottom',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Lugares',
+                                fontSize: 16
+                            },
+                            scales: {
+                                xAxes: [{
+                                    stacked: true
+                                }],
+                                yAxes: [{
+                                    stacked: true
+                                }]
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: true
+                            }
+                        }
+                    })
+
+                    /*----------------------------------------*/
+                    /*  Daily Ocupation Chart
+                    /*----------------------------------------*/
+                    this.daily_ocupation_chart = new Chart('daily-ocupation-chart', {
+                        type: 'line',
+                        options: {
+                            responsive: true,
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Ocupação diária',
+                                fontSize: 16
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: true
+                            }
+                        }
+                    })
+
+                    /*----------------------------------------*/
+                    /*  Ocupation Rate Predicted Chart
+                    /*----------------------------------------*/
+                    this.ocupation_rate_predicted_chart = new Chart('ocupation-rate-predicted-chart', {
+                        type: 'line',
+                        options: {
+                            responsive: true,
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Taxa de ocupação prevista',
+                                fontSize: 16
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: true
+                            },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        min: 0,
+                                        max: 100
+                                    }
+                                }],
+                                xAxes: [{
+                                    type: 'time'
+                                }]
+                            }
+                        }
+                    })
+                },
+                fecthData() {
+                    this.loading = true
+                    this.emptyChartData(this.ocupation_rate_chart)
+                    this.emptyChartData(this.seats_chart)
+                    this.emptyChartData(this.daily_ocupation_chart)
+                    this.emptyChartData(this.ocupation_rate_predicted_chart)
+                    setTimeout(() => {
+
+                        // Ocupation Rate Chart
+                        this.ocupation_rate_chart.data = {
+                            labels: ["Piso 0", "Piso 1", "Piso 2", "Piso 3"],
+                            datasets: [{
+                                data: [75, 70, 80, 90],
+                                backgroundColor: [
+                                    piso_0_color,
+                                    piso_1_color,
+                                    piso_2_color,
+                                    piso_3_color
+                                ]
+                            }]
+                        }
+                        this.ocupation_rate_chart.update()
+
+                        // Seats Chart
+                        this.seats_chart.data = {
+                            labels: ["Piso 0", "Piso 1", "Piso 2", "Piso 3"],
+                            datasets: [{
+                                label: 'Livres',
+                                data: [5, 8, 10, 9],
+                                backgroundColor: lugares_livres_color
+                            }, {
+                                label: 'Ocupados',
+                                data: [20, 15, 30, 20],
+                                backgroundColor: lugares_ocupados_color
+                            }]
+                        }
+                        this.seats_chart.update()
+
+                        // Daily Ocupation Chart
+                        this.daily_ocupation_chart.data = {
+                            labels: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
+                            datasets: [
+                                {
+                                    label: 'Piso 0',
+                                    data: [80, 70, 35, 80, 50],
+                                    fill: false,
+                                    backgroundColor: piso_0_color,
+                                    borderColor: piso_0_color
+                                },
+                                {
+                                    label: 'Piso 1',
+                                    data: [60, 70, 30, 60, 50],
+                                    fill: false,
+                                    backgroundColor: piso_1_color,
+                                    borderColor: piso_1_color
+                                },
+                                {
+                                    label: 'Piso 2',
+                                    data: [120, 110, 50, 115, 70],
+                                    fill: false,
+                                    backgroundColor: piso_2_color,
+                                    borderColor: piso_2_color
+                                },
+                                {
+                                    label: 'Piso 3',
+                                    data: [85, 100, 50, 75, 80],
+                                    fill: false,
+                                    backgroundColor: piso_3_color,
+                                    borderColor: piso_3_color
+                                }
+                            ]
+                        }
+                        this.daily_ocupation_chart.update()
+
+                        // Ocupation Rate Predicted Chart
+                        this.ocupation_rate_predicted_chart.data = {
+                            labels: [
+                                new Date(2018, 11, 29, 12),
+                                new Date(2018, 11, 29, 13),
+                                new Date(2018, 11, 29, 14),
+                                new Date(2018, 11, 29, 15),
+                                new Date(2018, 11, 29, 16),
+                            ],
+                            datasets: [
+                                {
+                                    label: 'Piso 0',
+                                    data: [75, 70, 35, 80, 50],
+                                    fill: false,
+                                    backgroundColor: piso_0_color,
+                                    borderColor: piso_0_color
+                                },
+                                {
+                                    label: 'Piso 1',
+                                    data: [70, 72.5, 30, 62.5, 55],
+                                    fill: false,
+                                    backgroundColor: piso_1_color,
+                                    borderColor: piso_1_color
+                                },
+                                {
+                                    label: 'Piso 2',
+                                    data: [90, 85, 50, 75, 70],
+                                    fill: false,
+                                    backgroundColor: piso_2_color,
+                                    borderColor: piso_2_color
+                                },
+                                {
+                                    label: 'Piso 3',
+                                    data: [80, 85, 50, 70, 80],
+                                    fill: false,
+                                    backgroundColor: piso_3_color,
+                                    borderColor: piso_3_color
+                                }
+                            ]
+                        }
+                        this.ocupation_rate_predicted_chart.update()
+
+                        // loading false
+                        this.loading = false
+
+                    }, 1000)
+                }
+            },
+            mounted: function () {
+                this.initCharts()
+                this.fecthData()
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

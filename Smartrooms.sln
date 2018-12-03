@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smartrooms", "Smartrooms\Smartrooms.csproj", "{8166699A-579C-4443-8236-CBA8F90FC9FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{CDCA0358-CE10-43AC-A95E-54817C6272CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8166699A-579C-4443-8236-CBA8F90FC9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8166699A-579C-4443-8236-CBA8F90FC9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8166699A-579C-4443-8236-CBA8F90FC9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCA0358-CE10-43AC-A95E-54817C6272CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCA0358-CE10-43AC-A95E-54817C6272CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCA0358-CE10-43AC-A95E-54817C6272CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCA0358-CE10-43AC-A95E-54817C6272CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
