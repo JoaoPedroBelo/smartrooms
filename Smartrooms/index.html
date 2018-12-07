@@ -409,10 +409,10 @@
                     let rooms_last_event = []
 
                     try {
-                        const rooms_response = await axios.get('http://smartrooms.ddns.net:5000/api/rooms')
+                        const rooms_response = await axios.get('https://smartrooms.ddns.net/api/rooms')
                         rooms = rooms_response.data
                         rooms_last_event = await Promise.all(rooms.map(async r => {
-                            last_event_response = await axios.get(`http://smartrooms.ddns.net:5000/api/room/${r.id}/last-event`)
+                            last_event_response = await axios.get(`https://smartrooms.ddns.net/api/room/${r.id}/last-event`)
                             if (last_event_response.data && last_event_response.data.length) return last_event_response.data[0]
                             return null
                         }))
@@ -556,10 +556,10 @@
                     let rooms_history_events = []
 
                     try {
-                        const rooms_response = await axios.get('http://smartrooms.ddns.net:5000/api/rooms')
+                        const rooms_response = await axios.get('https://smartrooms.ddns.net/api/rooms')
                         rooms = rooms_response.data
                         rooms_history_events = await Promise.all(rooms.map(async r => {
-                            const room_history_events_response = await axios.get(`http://smartrooms.ddns.net:5000/api/room/${r.id}/events/${from.toJSON()}/${to.toJSON()}`)
+                            const room_history_events_response = await axios.get(`https://smartrooms.ddns.net/api/room/${r.id}/events/${from.toJSON()}/${to.toJSON()}`)
                             return room_history_events_response.data
                         }))
                     } catch (e) {
