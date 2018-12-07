@@ -578,7 +578,7 @@
                             data: rooms_history_events[i].map(e => {
                                 return {
                                     t: new Date(e.time),
-                                    y: (e.occupied_seats >= 0 && e.empty_seats >= 0) ? Math.round((e.occupied_seats / (e.occupied_seats + e.empty_seats)) * 100) : null
+                                    y: e.occupied_seats
                                 }
                             }),
                             fill: false,
@@ -595,7 +595,7 @@
                             data: rooms_history_events[i].map(e => {
                                 return {
                                     t: new Date(e.time),
-                                    y: e.occupied_seats
+                                    y: (e.occupied_seats >= 0 && e.empty_seats >= 0) ? Math.round((e.occupied_seats / (e.occupied_seats + e.empty_seats)) * 100) : null
                                 }
                             }),
                             fill: false,
