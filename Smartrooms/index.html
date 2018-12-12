@@ -178,19 +178,8 @@
             },
             watch: {
                 time_range: function () {
-                    console.log(this.time_range)
-                    if (this.time_range == 'Now') {
-                        //Vue.nextTick(() => {
-                        this.fetchData()
-                        //})
-                    } else {
-                        if (this.time_range != 'Custom') {
-                            //Vue.nextTick(() => {
-                            this.fetchHistoryData()
-                            //})
-                        }
-                    }
-
+                    if (this.time_range == 'Now') this.fetchData()
+                    else if (this.time_range != 'Custom') this.fetchHistoryData()
                 },
                 custom_from: function () {
                     this.customUpdated()
@@ -202,7 +191,6 @@
             methods: {
                 customUpdated() {
                     if (this.time_range == 'Custom' && this.custom_from != null && this.custom_to != null) {
-                        console.log(this.custom_from, this.custom_to)
                         this.fetchHistoryData()
                     }
                 },
@@ -407,8 +395,6 @@
                 },
                 async fetchData() {
 
-                    console.log('fetchData')
-
                     this.loading = true
                     this.error = ''
 
@@ -420,17 +406,26 @@
                     let rooms = []
                     let rooms_last_event = []
                     let rooms_daily_occupation = []
+                    let rooms_predict_occupation = []
 
                     try {
+                        // Rooms
                         const rooms_response = await axios.get('https://smartrooms.ddns.net/api/rooms')
                         rooms = rooms_response.data
+                        // Rooms Last Event
                         rooms_last_event = await Promise.all(rooms.map(async r => {
-                            last_event_response = await axios.get(`https://smartrooms.ddns.net/api/room/${r.id}/last-event`)
+                            const last_event_response = await axios.get(`https://smartrooms.ddns.net/api/room/${r.id}/last-event`)
                             if (last_event_response.data && last_event_response.data.length) return last_event_response.data[0]
                             return null
                         }))
-                        rooms_daily_occupation_response = await axios.get('https://smartrooms.ddns.net/api/rooms/occupation/daily')
+                        // Rooms Daily Occupation
+                        const rooms_daily_occupation_response = await axios.get('https://smartrooms.ddns.net/api/rooms/occupation/daily')
                         rooms_daily_occupation = rooms_daily_occupation_response.data
+                        // Rooms Predict Occupation
+                        rooms_predict_occupation = await Promise.all(rooms.map(async r => {
+                            const room_predict_response = await axios.get(`https://smartrooms.ddns.net/api/room/${r.id}/predict`)
+                            return room_predict_response.data
+                        }))
                     } catch (e) {
                         this.loading = false
                         this.error = e.message
@@ -492,30 +487,30 @@
                     this.daily_occupation_chart.update()
 
                     // occupation Rate Predicted Chart
+                    const next_4_hours = [
+                        moment().add(1, 'hours').minutes(0).seconds(0),
+                        moment().add(2, 'hours').minutes(0).seconds(0),
+                        moment().add(3, 'hours').minutes(0).seconds(0),
+                        moment().add(4, 'hours').minutes(0).seconds(0),
+                    ]
                     this.occupation_rate_predicted_chart.data = {
-                        labels: [
-                            new Date(2018, 11, 29, 12),
-                            new Date(2018, 11, 29, 13),
-                            new Date(2018, 11, 29, 14),
-                            new Date(2018, 11, 29, 15),
-                            new Date(2018, 11, 29, 16),
-                        ],
-                        datasets: [/* 
-                            {
-                                label: 'Piso 0',
-                                data: [75, 70, 35, 80, 50],
+                        labels: next_4_hours.map(m => m.toDate()),
+                        datasets: rooms.map((r,i) => {
+                            return {
+                                label: r.nome_sala,
+                                data: next_4_hours.map(m => {
+                                    room_hour_occupation_prediction = rooms_predict_occupation[i].find(o => o.hour == m.hour())
+                                    if (room_hour_occupation_prediction && room_hour_occupation_prediction.occupied_seats_avg > 0 && room_hour_occupation_prediction.empty_seats_avg > 0) {
+                                        return Math.round((room_hour_occupation_prediction.occupied_seats_avg / ( room_hour_occupation_prediction.occupied_seats_avg + room_hour_occupation_prediction.empty_seats_avg ))*100)
+                                    } else {
+                                        return null
+                                    }
+                                }),
                                 fill: false,
-                                backgroundColor: piso_0_color,
-                                borderColor: piso_0_color
-                            },
-                            {
-                                label: 'Piso 1',
-                                data: [70, 72.5, 30, 62.5, 55],
-                                fill: false,
-                                backgroundColor: piso_1_color,
-                                borderColor: piso_1_color
-                            },...
-                         */]
+                                backgroundColor: r.color,
+                                borderColor: r.color
+                            }
+                        })
                     }
                     this.occupation_rate_predicted_chart.update()
 
@@ -524,8 +519,6 @@
 
                 },
                 async fetchHistoryData() {
-
-                    console.log('fetchHistoryData')
 
                     this.loading = true
                     this.error = ''
