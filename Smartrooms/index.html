@@ -225,12 +225,16 @@
                                     ticks: {
                                         min: 0,
                                         max: 100
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: '%'
                                     }
                                 }]
                             },
                             title: {
                                 display: true,
-                                text: 'Taxa de ocupação',
+                                text: 'Taxa de Ocupação',
                                 fontSize: 16
                             },
                             legend: {
@@ -258,7 +262,11 @@
                                     stacked: true
                                 }],
                                 yAxes: [{
-                                    stacked: true
+                                    stacked: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Seats'
+                                    }
                                 }]
                             },
                             tooltips: {
@@ -282,12 +290,20 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Ocupação diária',
+                                text: 'Taxa de Ocupação Média Diária',
                                 fontSize: 16
                             },
                             tooltips: {
                                 mode: 'index',
                                 intersect: true
+                            },
+                            scales: {
+                                yAxes: [{
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: '%'
+                                    }
+                                }]
                             }
                         }
                     })
@@ -306,7 +322,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Taxa de ocupação prevista',
+                                text: 'Taxa de Ocupação Prevista',
                                 fontSize: 16
                             },
                             tooltips: {
@@ -315,9 +331,9 @@
                             },
                             scales: {
                                 yAxes: [{
-                                    ticks: {
-                                        min: 0,
-                                        max: 100
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: '%'
                                     }
                                 }],
                                 xAxes: [{
@@ -377,10 +393,6 @@
                             },
                             scales: {
                                 yAxes: [{
-                                    ticks: {
-                                        min: 0,
-                                        max: 100
-                                    },
                                     scaleLabel: {
                                         display: true,
                                         labelString: '%'
@@ -407,6 +419,7 @@
 
                     let rooms = []
                     let rooms_last_event = []
+                    let rooms_daily_occupation = []
 
                     try {
                         const rooms_response = await axios.get('https://smartrooms.ddns.net/api/rooms')
@@ -416,6 +429,8 @@
                             if (last_event_response.data && last_event_response.data.length) return last_event_response.data[0]
                             return null
                         }))
+                        rooms_daily_occupation_response = await axios.get('https://smartrooms.ddns.net/api/rooms/occupation/daily')
+                        rooms_daily_occupation = rooms_daily_occupation_response.data
                     } catch (e) {
                         this.loading = false
                         this.error = e.message
@@ -456,22 +471,23 @@
                     // Daily occupation Chart
                     this.daily_occupation_chart.data = {
                         labels: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
-                        datasets: [/* 
-                            {
-                                label: 'Piso 0',
-                                data: [80, 70, 35, 80, 50],
+                        datasets: rooms.map(r => {
+                            return {
+                                label: r.nome_sala,
+                                data: rooms_daily_occupation.filter(o => o.id_room == r.id && o.week_day >= 1 && o.week_day <= 5)
+                                        .sort((a,b) => a.week_day - b.week_day)
+                                        .map(o => {
+                                            if (o.occupied_seats_avg >= 0 && o.empty_seats_avg >= 0) {
+                                                return Math.round((o.occupied_seats_avg / (o.occupied_seats_avg + o.empty_seats_avg)) * 100)
+                                            } else {
+                                                return null
+                                            }
+                                        }),
                                 fill: false,
-                                backgroundColor: piso_0_color,
-                                borderColor: piso_0_color
-                            },
-                            {
-                                label: 'Piso 1',
-                                data: [60, 70, 30, 60, 50],
-                                fill: false,
-                                backgroundColor: piso_1_color,
-                                borderColor: piso_1_color
-                            },...
-                         */]
+                                backgroundColor: r.color,
+                                borderColor: r.color
+                            }
+                        })
                     }
                     this.daily_occupation_chart.update()
 
