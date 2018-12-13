@@ -1,20 +1,21 @@
-﻿<!doctype html>
-<html lang="en">
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="teste.aspx.cs" Inherits="Smartrooms.teste" %>
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+       <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
 
     <title>Smart Study Rooms</title>
 </head>
-
 <body style="background: rgb(243, 243, 243)">
-
-    <div id="app">
+    <form id="form1" runat="server">
+        <div id="app">
 
         <header>
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -54,73 +55,28 @@
             <p>if you like to receive an email notification with rooms occupation hourly fill the fields below: </p>
             <br/>
             <br/>
-            
+            <form onsubmit="insert()">
                 <div class="form-group options">
                     <label class="control-label col-md-1" for="optiontext">email:</label>
                     <input type="email" id="emailField" required placeholder="Enter your email">
                     <br/>
                     <label class="control-label col-md-4" for="optiontext">Choose a room</label>
                     <div class="col-md-6">
-                        <input type="checkbox"  id="option0" value="option0" /> room 0<br>
-                        <input type="checkbox" id="option1" value="option1" /> room 1<br>
-                        <input type="checkbox" id="option2" value="option2" /> room 2<br>
-                        <input type="checkbox" id="option3" value="option3" /> room 3<br>
+                        <input type="checkbox" name="option[]" value="option0" /> room 0<br>
+                        <input type="checkbox" name="option[]" value="option1" /> room 1<br>
+                        <input type="checkbox" name="option[]" value="option2" /> room 2<br>
+                        <input type="checkbox" name="option[]" value="option3" /> room 3<br>
                     </div>
                 </div>
 
-                <input type="submit" onclick="insert()">
+                <input type="submit">
 
 
-      
+            </form>
 
         </div>
 
     </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-    
-     async function insert() {
-        var email = document.getElementById("emailField").value;
-        var option0=0;
-        var option1=0;
-        var option2=0;
-        var option3=0;
-        
-
-        if (document.getElementById("option0").checked == true) {
-            option0=1;
-        }
-        
-        if (document.getElementById("option1").checked == true) {
-            option1=1;
-        }
-        
-        if (document.getElementById("option2").checked == true) {
-            option2=1;
-        }
-        if (document.getElementById("option3").checked == true) {
-            option3=1;
-        }
-         var link = 'https://smartrooms.ddns.net/api/subscribed/' + email + '/' + option0 + '/' + option1 + '/' + option2 + '/'+option3;
-
-        const response = await axios.get(link)
-         alert(response.data)
-         window.location.replace('/')
-
-  }
-  
-
-   
-</script>
+    </form>
 </body>
-
 </html>
