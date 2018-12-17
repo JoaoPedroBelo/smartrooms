@@ -51,27 +51,28 @@
 
         <div class="container" style="margin-top: 80px" v-show="view == 'charts'">
             <h3>subscribe</h3>
-            <p>if you like to receive an email notification with rooms occupation hourly fill the fields below: </p>
-            <br/>
-            <br/>
-            
-                <div class="form-group options">
-                    <label class="control-label col-md-1" for="optiontext">email:</label>
-                    <input type="email" id="emailField" required placeholder="Enter your email">
-                    <br/>
-                    <label class="control-label col-md-4" for="optiontext">Choose a room</label>
-                    <div class="col-md-6">
-                        <input type="checkbox"  id="option0" value="option0" /> room 0<br>
-                        <input type="checkbox" id="option1" value="option1" /> room 1<br>
-                        <input type="checkbox" id="option2" value="option2" /> room 2<br>
-                        <input type="checkbox" id="option3" value="option3" /> room 3<br>
-                    </div>
+            <p> If you would like to receive an email notification with the rooms occupation every hour fill the fields below: </p>
+            <p>To unsubscribe insert your email below and uncheck all the boxes</p>
+            <br />
+            <br />
+
+            <div class="form-group options">
+                <label class="control-label col-md-1" for="optiontext">email:</label>
+                <input type="email" id="emailField" required placeholder="Enter your email">
+                <br />
+                <label class="control-label col-md-4" for="optiontext">Choose a room</label>
+                <div class="col-md-6">
+                    <input type="checkbox" id="option0" value="option0" /> room 0<br>
+                    <input type="checkbox" id="option1" value="option1" /> room 1<br>
+                    <input type="checkbox" id="option2" value="option2" /> room 2<br>
+                    <input type="checkbox" id="option3" value="option3" /> room 3<br>
                 </div>
+            </div>
 
-                <input type="submit" onclick="insert()">
+            <input type="submit" id="submit" onclick="insert()">
 
 
-      
+
 
         </div>
 
@@ -88,35 +89,46 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     
-     async function insert() {
+    async function insert() {
+        
         var email = document.getElementById("emailField").value;
         var option0=0;
         var option1=0;
         var option2=0;
         var option3=0;
         
+        if (validEmail(email)) {
 
-        if (document.getElementById("option0").checked == true) {
-            option0=1;
-        }
-        
-        if (document.getElementById("option1").checked == true) {
-            option1=1;
-        }
-        
-        if (document.getElementById("option2").checked == true) {
-            option2=1;
-        }
-        if (document.getElementById("option3").checked == true) {
-            option3=1;
-        }
-         var link = 'https://smartrooms.ddns.net/api/subscribed/' + email + '/' + option0 + '/' + option1 + '/' + option2 + '/'+option3;
 
-        const response = await axios.get(link)
-         alert(response.data)
-         window.location.replace('/')
+            if (document.getElementById("option0").checked == true) {
+                option0 = 1;
+            }
 
-  }
+            if (document.getElementById("option1").checked == true) {
+                option1 = 1;
+            }
+
+            if (document.getElementById("option2").checked == true) {
+                option2 = 1;
+            }
+            if (document.getElementById("option3").checked == true) {
+                option3 = 1;
+            }
+            var link = 'https://smartrooms.ddns.net/api/subscribed/' + email + '/' + option0 + '/' + option1 + '/' + option2 + '/' + option3;
+            document.getElementById("submit").disabled = true;
+            const response = await axios.get(link)
+            alert(response.data)
+            window.location.replace('/')
+        }
+        else {
+            alert("please insert a valid email")
+        }
+
+    }
+    function validEmail(e) {
+        var filter = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+        return String(e).search(filter) != -1;
+    }
   
 
    
