@@ -52,6 +52,14 @@
                 </ol>
             </nav>
 
+            <div class="row" v-if="loading">
+                <div class="col-md-12 my-2">
+                    <div class="alert alert-info">
+                        <strong>Loading...</strong>
+                    </div>
+                </div>
+            </div>
+
             <div class="row" v-if="error != ''">
                 <div class="col-md-12 my-2">
                     <div class="alert alert-danger">
@@ -190,6 +198,7 @@
         const app = new Vue({
             el: '#app',
             data: {
+                loading: false,
                 average_number_of_cars_parked_today: null,
                 average_number_of_free_spaces_today: null,
                 busiest_hours_today: [],
@@ -269,9 +278,9 @@
 
                     // Cars Parked Hourly Chart
                     this.cars_parked_hourly_chart.data = {
-                        labels: this.number_of_cars_parked_today_hourly.map((c,i) => i),
+                        labels: this.number_of_cars_parked_today_hourly.map((c, i) => i),
                         datasets: [{
-                            data: this.number_of_cars_parked_today_hourly.map((c,i) => c),
+                            data: this.number_of_cars_parked_today_hourly.map((c, i) => c),
                             backgroundColor: 'grey'
                         }]
                     }
