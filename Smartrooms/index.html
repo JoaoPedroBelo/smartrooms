@@ -25,19 +25,19 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="./g1.html">Grupo 1</a>
+                            <a class="nav-link" href="./g1.html">Group 1</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./g2.html">Grupo 2</a>
+                            <a class="nav-link" href="./g2.html">Group 2</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="./index.html">Grupo 3</a>
+                            <a class="nav-link" href="./index.html">Group 3</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./g4.html">Grupo 4</a>
+                            <a class="nav-link" href="./g4.html">Group 4</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./g5.html">Grupo 5</a>
+                            <a class="nav-link" href="./g5.html">Group 5</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav ml-auto">
@@ -133,13 +133,13 @@
 
                 <div class="col-md-6 my-2">
                     <div class="p-2 bg-white">
-                        <canvas id="occupation-history-chart"></canvas>
+                        <canvas id="occupation-rate-history-chart"></canvas>
                     </div>
                 </div>
 
                 <div class="col-md-6 my-2">
                     <div class="p-2 bg-white">
-                        <canvas id="occupation-rate-history-chart"></canvas>
+                        <canvas id="occupation-history-chart"></canvas>
                     </div>
                 </div>
 
@@ -222,7 +222,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Taxa de Ocupação',
+                                text: 'Occupation Rate',
                                 fontSize: 16
                             },
                             legend: {
@@ -242,7 +242,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Lugares',
+                                text: 'Seats',
                                 fontSize: 16
                             },
                             scales: {
@@ -278,7 +278,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Taxa de Ocupação Média Diária',
+                                text: 'Average Daily Occupation Rate',
                                 fontSize: 16
                             },
                             tooltips: {
@@ -310,7 +310,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Taxa de Ocupação Prevista',
+                                text: 'Predicted Occupation Rate',
                                 fontSize: 16
                             },
                             tooltips: {
@@ -345,7 +345,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Ocupação',
+                                text: 'Seats',
                                 fontSize: 16
                             },
                             scales: {
@@ -376,7 +376,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Taxa de ocupação',
+                                text: 'Occupation Rate',
                                 fontSize: 16
                             },
                             scales: {
@@ -452,11 +452,11 @@
                     this.seats_chart.data = {
                         labels: rooms.map(r => r.nome_sala),
                         datasets: [{
-                            label: 'Livres',
+                            label: 'Available',
                             data: rooms_last_event.map(r => r.empty_seats),
                             backgroundColor: 'rgb(141, 198, 121)'
                         }, {
-                            label: 'Ocupados',
+                            label: 'Occupied',
                             data: rooms_last_event.map(r => r.occupied_seats),
                             backgroundColor: 'rgb(85, 161, 195)'
                         }]
@@ -465,7 +465,7 @@
 
                     // Daily occupation Chart
                     this.daily_occupation_chart.data = {
-                        labels: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
+                        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
                         datasets: rooms.map(r => {
                             return {
                                 label: r.nome_sala,
