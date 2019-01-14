@@ -145,6 +145,28 @@
 
             </div>
 
+            <nav>
+                <ol class="breadcrumb bg-dark">
+                    <li class="breadcrumb-item text-white">Smart Study Rooms</li>
+                    <li class="breadcrumb-item text-white">Service Status</li>
+                </ol>
+            </nav>
+
+            <div class="row mb-3">
+
+                <div v-for="service in services" class="col-md-4 my-2">
+                    <div class="p-3 bg-white">
+                        <span class="h5">{{ service.name }}</span>
+                        <span class="float-right" style="font-size: 1.1rem; font-weight: 500;">{{ service.uptime }}</span>
+                        <br>
+                        <span v-if="service.status == 'Ok'" class="h5 badge badge-success">Operational</span>
+                        <span v-else class="h5 badge badge-danger">Not Operational</span>
+                        <span class="float-right" style="font-size: .9rem;">Uptime</span>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
@@ -174,6 +196,7 @@
                 occupation_rate_history_chart: null,
                 custom_from: null,
                 custom_to: null,
+                services: [],
                 error: ''
             },
             watch: {
@@ -618,6 +641,9 @@
                 }
             },
             mounted: function () {
+                axios.get('https://smartrooms.ddns.net/api/services/status').then(response => {
+                    this.services = response.data
+                })
                 this.initCharts()
                 this.time_range = 'Now'
             }
