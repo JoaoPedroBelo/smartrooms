@@ -159,8 +159,8 @@
                         <span class="h5">{{ service.name }}</span>
                         <span class="float-right" style="font-size: 1.1rem; font-weight: 500;">{{ service.uptime }}</span>
                         <br>
-                        <span v-if="service.status == 'Ok'" class="h5 badge badge-success">Operational</span>
-                        <span v-else class="h5 badge badge-danger">Not Operational</span>
+                        <span v-if="service.status == 'Ok'" class="h5 badge badge-pill badge-success">Operational</span>
+                        <span v-else class="h5 badge badge-pill badge-danger">Not Operational</span>
                         <span class="float-right" style="font-size: .9rem;">Uptime</span>
                     </div>
                 </div>
